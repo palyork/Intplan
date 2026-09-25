@@ -1,0 +1,2701 @@
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة — لوحة التحكم الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #121214;
+            --bg-card: #1a1a1e;
+            --bg-card-hover: #222228;
+            --bg-input: #16161a;
+            --border-color: #2a2a30;
+            --border-light: #333340;
+            --accent-green: #00e676;
+            --accent-green-dim: rgba(0, 230, 118, 0.15);
+            --accent-orange: #ff9800;
+            --accent-orange-dim: rgba(255, 152, 0, 0.15);
+            --accent-blue: #448aff;
+            --accent-blue-dim: rgba(68, 138, 255, 0.15);
+            --accent-red: #ff5252;
+            --accent-purple: #b388ff;
+            --text-primary: #f0f0f0;
+            --text-secondary: #9999a0;
+            --text-muted: #555560;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.6);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-green), #00c853);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .sidebar-brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .sidebar-brand span {
+            color: var(--accent-green);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: var(--accent-green);
+            border-radius: 2px;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .nav-badge {
+            margin-right: auto;
+            background: var(--accent-green);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sidebar-user:hover {
+            background: var(--bg-card);
+        }
+
+        .sidebar-user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .sidebar-user-info {
+            flex: 1;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .sidebar-user-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            height: var(--header-height);
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            gap: 16px;
+            z-index: 50;
+        }
+
+        .header-search {
+            flex: 1;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .header-search input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .header-search input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .header-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .header-search .search-shortcut {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: auto;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            font-size: 16px;
+        }
+
+        .header-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .header-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .header-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .header-location:hover {
+            border-color: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .header-location i {
+            color: var(--accent-green);
+        }
+
+        .mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-title .greeting {
+            color: var(--accent-green);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Quick Access */
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .quick-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .quick-item:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .quick-item:active {
+            transform: translateY(0);
+        }
+
+        .quick-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .quick-icon.green { background: var(--accent-green-dim); color: var(--accent-green); }
+        .quick-icon.orange { background: var(--accent-orange-dim); color: var(--accent-orange); }
+        .quick-icon.blue { background: var(--accent-blue-dim); color: var(--accent-blue); }
+        .quick-icon.purple { background: rgba(179, 136, 255, 0.15); color: var(--accent-purple); }
+        .quick-icon.red { background: rgba(255, 82, 82, 0.15); color: var(--accent-red); }
+
+        .quick-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.1;
+        }
+
+        .stat-card.green::after { background: var(--accent-green); }
+        .stat-card.orange::after { background: var(--accent-orange); }
+        .stat-card.blue::after { background: var(--accent-blue); }
+        .stat-card.purple::after { background: var(--accent-purple); }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-change.up { color: var(--accent-green); }
+        .stat-change.down { color: var(--accent-red); }
+
+        .stat-change span {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .chart-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+        }
+
+        .chart-tab {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .chart-tab.active {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .chart-tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 240px;
+        }
+
+        /* Activity & Tasks */
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .activity-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .activity-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .activity-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .activity-dot.green { background: var(--accent-green); }
+        .activity-dot.orange { background: var(--accent-orange); }
+        .activity-dot.blue { background: var(--accent-blue); }
+        .activity-dot.red { background: var(--accent-red); }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .activity-action {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .activity-action.view {
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+        }
+
+        .activity-action.view:hover {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        /* Task Board */
+        .task-board {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-column {
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            padding: 14px;
+        }
+
+        .task-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .task-column-title {
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-count {
+            background: var(--border-color);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .task-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .task-item:hover {
+            border-color: var(--border-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .task-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .task-tag.high { background: rgba(255, 82, 82, 0.15); color: var(--accent-red); }
+        .task-tag.medium { background: var(--accent-orange-dim); color: var(--accent-orange); }
+        .task-tag.low { background: var(--accent-green-dim); color: var(--accent-green); }
+
+        .task-avatars {
+            display: flex;
+        }
+
+        .task-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+            margin-right: -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        /* Files Section */
+        .files-section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Tajawal', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #00c853;
+            box-shadow: 0 4px 16px rgba(0, 230, 118, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--border-light);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .file-card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .file-card-menu {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--bg-input);
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            font-size: 12px;
+        }
+
+        .file-card:hover .file-card-menu {
+            opacity: 1;
+        }
+
+        .file-card-menu:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        .file-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+
+        .file-icon.folder { background: var(--accent-orange-dim); color: var(--accent-orange); }
+        .file-icon.pdf { background: rgba(255, 82, 82, 0.15); color: var(--accent-red); }
+        .file-icon.figma { background: rgba(179, 136, 255, 0.15); color: var(--accent-purple); }
+        .file-icon.code { background: var(--accent-green-dim); color: var(--accent-green); }
+        .file-icon.image { background: var(--accent-blue-dim); color: var(--accent-blue); }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-copy-btn {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            font-size: 12px;
+        }
+
+        .file-card:hover .file-copy-btn {
+            opacity: 1;
+        }
+
+        .file-copy-btn:hover {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .file-copy-btn.copied {
+            opacity: 1;
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+            background: var(--accent-green-dim);
+        }
+
+        /* Kanban Board */
+        .kanban-section {
+            margin-bottom: 32px;
+        }
+
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .kanban-column {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            min-height: 300px;
+        }
+
+        .kanban-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .kanban-column-title {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kanban-column-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .kanban-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .kanban-card:hover {
+            border-color: var(--border-light);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+
+        .kanban-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .kanban-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kanban-card-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            min-width: 300px;
+        }
+
+        .toast.success {
+            border-color: var(--accent-green);
+        }
+
+        .toast.success .toast-icon {
+            color: var(--accent-green);
+        }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .toast-close {
+            margin-right: auto;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 520px;
+            padding: 32px;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+        }
+
+        .form-select:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-dim);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-start;
+            margin-top: 28px;
+        }
+
+        .modal-actions .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+        }
+
+        /* Command Palette */
+        .command-palette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 120px;
+        }
+
+        .command-palette.active {
+            display: flex;
+        }
+
+        .command-palette-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 560px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .command-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+        }
+
+        .command-input-wrapper i {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .command-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .command-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .command-results {
+            max-height: 360px;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .command-item:hover, .command-item.selected {
+            background: var(--bg-card);
+        }
+
+        .command-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .command-item-text {
+            flex: 1;
+        }
+
+        .command-item-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .command-item-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .command-item-shortcut {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 360px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 150;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+            animation: dropIn 0.2s ease;
+        }
+
+        @keyframes dropIn {
+            from { transform: translateY(-8px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .notification-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background: var(--bg-card);
+        }
+
+        .notification-item.unread {
+            background: var(--accent-green-dim);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-text {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .kanban-board { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .charts-section { grid-template-columns: 1fr; }
+            .bottom-section { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0;
+            }
+            .mobile-toggle {
+                display: flex;
+            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .kanban-board { grid-template-columns: 1fr; }
+            .page-content { padding: 20px; }
+            .header { padding: 0 16px; }
+            .header-location { display: none; }
+            .quick-access { grid-template-columns: repeat(3, 1fr); }
+            .files-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .quick-access { grid-template-columns: repeat(2, 1fr); }
+            .files-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Pulse animation for live indicator */
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 4px;
+            background: var(--bg-input);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.green { background: var(--accent-green); }
+        .progress-fill.orange { background: var(--accent-orange); }
+        .progress-fill.blue { background: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">خ</div>
+            <div class="sidebar-brand">خط<span>ة</span></div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">الرئيسية</div>
+                <div class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    لوحة التحكم
+                </div>
+                <div class="nav-item" data-page="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    التحليلات
+                    <span class="nav-badge">جديد</span>
+                </div>
+                <div class="nav-item" data-page="projects">
+                    <i class="fas fa-folder-open"></i>
+                    المشاريع
+                </div>
+                <div class="nav-item" data-page="tasks">
+                    <i class="fas fa-tasks"></i>
+                    المهام
+                    <span class="nav-badge">12</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">الإدارة</div>
+                <div class="nav-item" data-page="files">
+                    <i class="fas fa-file-alt"></i>
+                    الملفات
+                </div>
+                <div class="nav-item" data-page="team">
+                    <i class="fas fa-users"></i>
+                    الفريق
+                </div>
+                <div class="nav-item" data-page="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    التقويم
+                </div>
+                <div class="nav-item" data-page="messages">
+                    <i class="fas fa-comment-dots"></i>
+                    الرسائل
+                    <span class="nav-badge">5</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">النظام</div>
+                <div class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    الإعدادات
+                </div>
+                <div class="nav-item" data-page="security">
+                    <i class="fas fa-shield-alt"></i>
+                    الأمان
+                </div>
+                <div class="nav-item" data-page="integrations">
+                    <i class="fas fa-plug"></i>
+                    التكاملات
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user" id="userProfile">
+                <div class="sidebar-user-avatar">أح</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">أحمد محمد</div>
+                    <div class="sidebar-user-role">مدير النظام</div>
+                </div>
+                <i class="fas fa-ellipsis-v" style="color: var(--text-muted); font-size: 12px;"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="header-search" id="searchWrapper">
+                <input type="text" placeholder="ابحث في خطة... المشاريع، الملفات، المهام" id="searchInput">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="header-location" id="locationBtn">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>الرياض، السعودية</span>
+                <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+            </div>
+
+            <div class="header-actions">
+                <button class="header-btn" id="themeToggle" title="تبديل السمة">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="header-btn" id="notifBtn" title="الإشعارات" style="position: relative;">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="notifDropdown">
+                        <div class="notification-header">
+                            <h3>الإشعارات</h3>
+                            <button class="btn btn-ghost" style="font-size: 12px; padding: 4px 8px;">تعليم الكل كمقروء</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon" style="background: var(--accent-green-dim); color: var(--accent-green);">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-text">تم إنجاز مهمة "تصميم الواجهة" بنجاح</div>
+                                    <div class="notification-time">منذ 5 دقائق</div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon" style="background: var(--accent-blue-dim); color: var(--accent-blue);">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-text">انضم سارة أحمد إلى فريق التطوير</div>
+                                    <div class="notification-time">منذ 30 دقيقة</div>
+                                </div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon" style="background: var(--accent-orange-dim); color: var(--accent-orange);">
+                                    <i class="fas fa-exclamation"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-text">موعد تسليم مشروع "نظام الذكاء" غداً</div>
+                                    <div class="notification-time">منذ ساعة</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <div class="notification-icon" style="background: var(--accent-green-dim); color: var(--accent-green);">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-text">تم رفع 3 ملفات جديدة إلى المشروع</div>
+                                    <div class="notification-time">منذ 3 ساعات</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+                <button class="header-btn" id="commandBtn" title="الأوامر السريعة (Ctrl+K)">
+                    <i class="fas fa-terminal"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">مرحباً، <span class="greeting">أحمد</span> 👋</h1>
+                <p class="page-subtitle">إليك نظرة عامة على مشاريعك وأنشطتك اليوم — <span class="live-dot"></span> النظام يعمل بكفاءة</p>
+            </div>
+
+            <!-- Quick Access -->
+            <div class="quick-access">
+                <div class="quick-item" onclick="showToast('فتح مشروع جديد', 'success')">
+                    <div class="quick-icon green"><i class="fas fa-plus"></i></div>
+                    <div class="quick-label">مشروع جديد</div>
+                </div>
+                <div class="quick-item" onclick="showToast('رفع ملف', 'success')">
+                    <div class="quick-icon orange"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <div class="quick-label">رفع ملف</div>
+                </div>
+                <div class="quick-item" onclick="showToast('دعوة عضو', 'success')">
+                    <div class="quick-icon blue"><i class="fas fa-user-plus"></i></div>
+                    <div class="quick-label">دعوة عضو</div>
+                </div>
+                <div class="quick-item" onclick="showToast('تقرير جديد', 'success')">
+                    <div class="quick-icon purple"><i class="fas fa-file-chart-line"></i></div>
+                    <div class="quick-label">تقرير</div>
+                </div>
+                <div class="quick-item" onclick="showToast('اجتماع مجدول', 'success')">
+                    <div class="quick-icon red"><i class="fas fa-video"></i></div>
+                    <div class="quick-label">اجتماع</div>
+                </div>
+                <div class="quick-item" onclick="showToast('مهمة سريعة', 'success')">
+                    <div class="quick-icon green"><i class="fas fa-bolt"></i></div>
+                    <div class="quick-label">مهمة سريعة</div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card green">
+                    <div class="stat-header">
+                        <div class="stat-label">إجمالي الإيرادات</div>
+                        <div class="stat-icon" style="background: var(--accent-green-dim); color: var(--accent-green);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">$171,610</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i> +5.26%
+                        <span>من الشهر الماضي</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill green" style="width: 78%;"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card orange">
+                    <div class="stat-header">
+                        <div class="stat-label">الصفقات التلقائية</div>
+                        <div class="stat-icon" style="background: var(--accent-orange-dim); color: var(--accent-orange);">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">3,812</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i> +12%
+                        <span>من الشهر الماضي</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill orange" style="width: 65%;"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div class="stat-label">المشاريع النشطة</div>
+                        <div class="stat-icon" style="background: var(--accent-blue-dim); color: var(--accent-blue);">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i> +3
+                        <span>هذا الأسبوع</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill blue" style="width: 82%;"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card purple">
+                    <div class="stat-header">
+                        <div class="stat-label">أعضاء الفريق</div>
+                        <div class="stat-icon" style="background: rgba(179,136,255,0.15); color: var(--accent-purple);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i> +8
+                        <span>هذا الشهر</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%; background: var(--accent-purple);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">مخطط الإيرادات</div>
+                            <div class="chart-subtitle">تتبع أداء الإيرادات عبر الزمن</div>
+                        </div>
+                        <div class="chart-tabs">
+                            <button class="chart-tab active" data-period="week">أسبوع</button>
+                            <button class="chart-tab" data-period="month">شهر</button>
+                            <button class="chart-tab" data-period="year">سنة</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">توزيع المهام</div>
+                            <div class="chart-subtitle">حسب الحالة</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="tasksChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <!-- Recent Activity -->
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-title">النشاط الأخير</div>
+                        <button class="btn btn-ghost" style="font-size: 12px;">عرض الكل</button>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-dot green"></div>
+                            <div class="activity-info">
+                                <div class="activity-text">تم إنجاز مهمة "تصميم واجهة المستخدم"</div>
+                                <div class="activity-time">منذ 5 دقائق</div>
+                            </div>
+                            <button class="activity-action view">عرض</button>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-dot blue"></div>
+                            <div class="activity-info">
+                                <div class="activity-text">تم رفع ملف "تقرير-Q4.pdf" إلى المشروع</div>
+                                <div class="activity-time">منذ 20 دقيقة</div>
+                            </div>
+                            <button class="activity-action view">عرض</button>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-dot orange"></div>
+                            <div class="activity-info">
+                                <div class="activity-text">تم تحديث حالة مشروع "نظام الذكاء"</div>
+                                <div class="activity-time">منذ ساعة</div>
+                            </div>
+                            <button class="activity-action view">عرض</button>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-dot red"></div>
+                            <div class="activity-info">
+                                <div class="activity-text">تنبيه: موعد تسليم مهم غداً</div>
+                                <div class="activity-time">منذ ساعتين</div>
+                            </div>
+                            <button class="activity-action view">عرض</button>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-dot green"></div>
+                            <div class="activity-info">
+                                <div class="activity-text">انضم عضو جديد إلى فريق التطوير</div>
+                                <div class="activity-time">منذ 3 ساعات</div>
+                            </div>
+                            <button class="activity-action view">عرض</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Board Mini -->
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-title">لوحة المهام</div>
+                        <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" onclick="openModal()">
+                            <i class="fas fa-plus"></i> مهمة جديدة
+                        </button>
+                    </div>
+                    <div class="task-board">
+                        <div class="task-column">
+                            <div class="task-column-header">
+                                <div class="task-column-title">
+                                    <span class="dot" style="background: var(--accent-orange); width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>
+                                    قيد التنفيذ
+                                    <span class="task-count">4</span>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-name">تطوير API المصادقة</div>
+                                <div class="task-meta">
+                                    <span class="task-tag high">عالية</span>
+                                    <div class="task-avatars">
+                                        <div class="task-avatar" style="background: var(--accent-green);">أ</div>
+                                        <div class="task-avatar" style="background: var(--accent-blue);">س</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-name">مراجعة كود الواجهة</div>
+                                <div class="task-meta">
+                                    <span class="task-tag medium">متوسطة</span>
+                                    <div class="task-avatars">
+                                        <div class="task-avatar" style="background: var(--accent-orange);">م</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="task-column">
+                            <div class="task-column-header">
+                                <div class="task-column-title">
+                                    <span class="dot" style="background: var(--accent-green); width: 8px; height: 8px; border-radius: 50%; display: inline-block;"></span>
+                                    مكتملة
+                                    <span class="task-count">7</span>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-name">تصميم صفحة الهبوط</div>
+                                <div class="task-meta">
+                                    <span class="task-tag low">منخفضة</span>
+                                    <div class="task-avatars">
+                                        <div class="task-avatar" style="background: var(--accent-purple);">ف</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files Section -->
+            <div class="files-section">
+                <div class="section-header">
+                    <div class="section-title">الملفات الأخيرة</div>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary"><i class="fas fa-filter"></i> تصفية</button>
+                        <button class="btn btn-primary" onclick="showToast('تم فتح نافذة رفع الملفات', 'success')"><i class="fas fa-upload"></i> رفع ملف</button>
+                    </div>
+                </div>
+                <div class="files-grid">
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon folder"><i class="fas fa-folder"></i></div>
+                        <div class="file-name">مشروع-الذكاء</div>
+                        <div class="file-meta"><span>12 ملف</span> · <span>2.4 GB</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('مشروع-الذكاء', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon pdf"><i class="fas fa-file-pdf"></i></div>
+                        <div class="file-name">تقرير-Q4-2024.pdf</div>
+                        <div class="file-meta"><span>4.2 MB</span> · <span>أمس</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('تقرير-Q4-2024.pdf', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon figma"><i class="fas fa-pen-nib"></i></div>
+                        <div class="file-name">تصميم-الواجهة.fig</div>
+                        <div class="file-meta"><span>18.7 MB</span> · <span>منذ يومين</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('تصميم-الواجهة.fig', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon code"><i class="fas fa-code"></i></div>
+                        <div class="file-name">app-config.js</div>
+                        <div class="file-meta"><span>12 KB</span> · <span>منذ 3 أيام</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('app-config.js', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon image"><i class="fas fa-image"></i></div>
+                        <div class="file-name">شعار-العلامة.png</div>
+                        <div class="file-meta"><span>1.8 MB</span> · <span>منذ أسبوع</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('شعار-العلامة.png', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                    <div class="file-card">
+                        <button class="file-card-menu"><i class="fas fa-ellipsis-h"></i></button>
+                        <div class="file-icon folder"><i class="fas fa-folder"></i></div>
+                        <div class="file-name">أرشيف-2024</div>
+                        <div class="file-meta"><span>48 ملف</span> · <span>8.1 GB</span></div>
+                        <button class="file-copy-btn" onclick="copyToClipboard('أرشيف-2024', this)" title="نسخ الاسم"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="kanban-section">
+                <div class="section-header">
+                    <div class="section-title">مشاريع نشطة</div>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary"><i class="fas fa-th"></i> عرض الكل</button>
+                    </div>
+                </div>
+                <div class="kanban-board">
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <div class="kanban-column-title">
+                                <span class="dot" style="background: var(--text-muted);"></span>
+                                مخطط
+                                <span class="task-count">3</span>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">تحليل متطلبات نظام الذكاء الاصطناعي</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-red); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px;">عاجل</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-green); width: 20px; height: 20px; font-size: 8px;">أ</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">تصميم بنية قاعدة البيانات</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px;">متوسط</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-blue); width: 20px; height: 20px; font-size: 8px;">س</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <div class="kanban-column-title">
+                                <span class="dot" style="background: var(--accent-blue);"></span>
+                                قيد التطوير
+                                <span class="task-count">2</span>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">تطوير واجهة المستخدم الرئيسية</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-blue); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px;">تطوير</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-purple); width: 20px; height: 20px; font-size: 8px;">ف</div>
+                                    <div class="task-avatar" style="background: var(--accent-orange); width: 20px; height: 20px; font-size: 8px;">م</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">بناء API للخدمات الخلفية</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-blue); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px;">تطوير</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-green); width: 20px; height: 20px; font-size: 8px;">أ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <div class="kanban-column-title">
+                                <span class="dot" style="background: var(--accent-orange);"></span>
+                                مراجعة
+                                <span class="task-count">2</span>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">مراجعة أمان النظام والتشفير</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-orange); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 4px;">مراجعة</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-red); width: 20px; height: 20px; font-size: 8px;">خ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <div class="kanban-column-title">
+                                <span class="dot" style="background: var(--accent-green);"></span>
+                                مكتمل
+                                <span class="task-count">5</span>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">إعداد بيئة التطوير والاختبار</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-green); color: #000; font-size: 10px; padding: 2px 8px; border-radius: 4px;">مكتمل</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-blue); width: 20px; height: 20px; font-size: 8px;">س</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-title">توثيق API وكتابة الدليل التقني</div>
+                            <div class="kanban-card-footer">
+                                <span class="kanban-card-tag" style="background: var(--accent-green); color: #000; font-size: 10px; padding: 2px 8px; border-radius: 4px;">مكتمل</span>
+                                <div class="task-avatars">
+                                    <div class="task-avatar" style="background: var(--accent-purple); width: 20px; height: 20px; font-size: 8px;">ف</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div class="command-palette" id="commandPalette">
+        <div class="command-palette-content">
+            <div class="command-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="command-input" placeholder="اكتب أمراً أو ابحث..." id="commandInput">
+                <span class="command-item-shortcut">ESC</span>
+            </div>
+            <div class="command-results" id="commandResults">
+                <div class="command-item" data-action="dashboard">
+                    <div class="command-item-icon"><i class="fas fa-th-large"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">لوحة التحكم</div>
+                        <div class="command-item-desc">العودة إلى الصفحة الرئيسية</div>
+                    </div>
+                    <span class="command-item-shortcut">⌘D</span>
+                </div>
+                <div class="command-item" data-action="new-project">
+                    <div class="command-item-icon"><i class="fas fa-plus"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">مشروع جديد</div>
+                        <div class="command-item-desc">إنشاء مشروع جديد</div>
+                    </div>
+                    <span class="command-item-shortcut">⌘N</span>
+                </div>
+                <div class="command-item" data-action="new-task">
+                    <div class="command-item-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">مهمة جديدة</div>
+                        <div class="command-item-desc">إضافة مهمة سريعة</div>
+                    </div>
+                    <span class="command-item-shortcut">T</span>
+                </div>
+                <div class="command-item" data-action="files">
+                    <div class="command-item-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">الملفات</div>
+                        <div class="command-item-desc">إدارة الملفات والمستندات</div>
+                    </div>
+                    <span class="command-item-shortcut">⌘F</span>
+                </div>
+                <div class="command-item" data-action="settings">
+                    <div class="command-item-icon"><i class="fas fa-cog"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">الإعدادات</div>
+                        <div class="command-item-desc">تخصيص النظام والتفضيلات</div>
+                    </div>
+                    <span class="command-item-shortcut">⌘,</span>
+                </div>
+                <div class="command-item" data-action="team">
+                    <div class="command-item-icon"><i class="fas fa-users"></i></div>
+                    <div class="command-item-text">
+                        <div class="command-item-title">إدارة الفريق</div>
+                        <div class="command-item-desc">عرض وإدارة أعضاء الفريق</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">مهمة جديدة</h2>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="taskForm" onsubmit="submitTask(event)">
+                <div class="form-group">
+                    <label class="form-label">عنوان المهمة</label>
+                    <input type="text" class="form-input" placeholder="أدخل عنوان المهمة..." required id="taskTitle">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">الوصف</label>
+                    <textarea class="form-input" placeholder="أضف وصفاً تفصيلياً..." id="taskDesc"></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">الأولوية</label>
+                        <select class="form-select" id="taskPriority">
+                            <option value="high">عالية</option>
+                            <option value="medium" selected>متوسطة</option>
+                            <option value="low">منخفضة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">تاريخ التسليم</label>
+                        <input type="date" class="form-input" id="taskDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">تعيين إلى</label>
+                    <select class="form-select" id="taskAssignee">
+                        <option value="ahmed">أحمد محمد</option>
+                        <option value="sara">سارة أحمد</option>
+                        <option value="mohammed">محمد علي</option>
+                        <option value="fatima">فاطمة خالد</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> إنشاء المهمة</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Chart.js defaults
+        Chart.defaults.color = '#9999a0';
+        Chart.defaults.font.family = 'Tajawal';
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 240);
+        revenueGradient.addColorStop(0, 'rgba(0, 230, 118, 0.3)');
+        revenueGradient.addColorStop(1, 'rgba(0, 230, 118, 0)');
+
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+                datasets: [{
+                    label: 'الإيرادات',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+                    borderColor: '#00e676',
+                    backgroundColor: revenueGradient,
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#00e676',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 2
+                }, {
+                    label: 'المصروفات',
+                    data: [8000, 12000, 10000, 15000, 14000, 18000, 16000, 20000, 19000, 22000, 21000, 25000],
+                    borderColor: '#ff9800',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#ff9800',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 20,
+                            font: { size: 12, family: 'Tajawal' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a1a1e',
+                        titleColor: '#f0f0f0',
+                        bodyColor: '#9999a0',
+                        borderColor: '#2a2a30',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: { family: 'Tajawal', size: 13 },
+                        bodyFont: { family: 'Tajawal', size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(42, 42, 48, 0.5)', drawBorder: false },
+                        ticks: { font: { size: 11, family: 'Tajawal' } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(42, 42, 48, 0.5)', drawBorder: false },
+                        ticks: {
+                            font: { size: 11, family: 'Tajawal' },
+                            callback: function(value) { return '$' + (value / 1000) + 'K'; }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Tasks Doughnut Chart
+        const tasksCtx = document.getElementById('tasksChart').getContext('2d');
+        const tasksChart = new Chart(tasksCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['مكتملة', 'قيد التنفيذ', 'معلقة', 'ملغاة'],
+                datasets: [{
+                    data: [42, 28, 18, 12],
+                    backgroundColor: ['#00e676', '#448aff', '#ff9800', '#ff5252'],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '72%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 16,
+                            font: { size: 12, family: 'Tajawal' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a1a1e',
+                        titleColor: '#f0f0f0',
+                        bodyColor: '#9999a0',
+                        borderColor: '#2a2a30',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sidebar Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.dataset.page;
+                showToast('الانتقال إلى: ' + this.textContent.trim().split('\n')[0].trim(), 'success');
+                // Close mobile sidebar
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('active');
+            });
+        });
+
+        // Mobile Toggle
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        });
+
+        document.getElementById('sidebarOverlay').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('open');
+            this.classList.remove('active');
+        });
+
+        // Chart Tabs
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const period = this.dataset.period;
+                let newData, newLabels;
+                
+                if (period === 'week') {
+                    newLabels = ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+                    newData = [5000, 7000, 6000, 9000, 8000, 11000, 10000];
+                } else if (period === 'month') {
+                    newLabels = ['أسبوع 1', 'أسبوع 2', 'أسبوع 3', 'أسبوع 4'];
+                    newData = [25000, 32000, 28000, 38000];
+                } else {
+                    newLabels = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                    newData = [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000];
+                }
+                
+                revenueChart.data.labels = newLabels;
+                revenueChart.data.datasets[0].data = newData;
+                revenueChart.data.datasets[1].data = newData.map(v => Math.round(v * 0.6));
+                revenueChart.update();
+            });
+        });
+
+        // Notification Toggle
+        document.getElementById('notifBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('notifDropdown').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#notifBtn')) {
+                document.getElementById('notifDropdown').classList.remove('active');
+            }
+        });
+
+        // Command Palette
+        const commandPalette = document.getElementById('commandPalette');
+        const commandInput = document.getElementById('commandInput');
+
+        document.getElementById('commandBtn').addEventListener('click', function() {
+            commandPalette.classList.add('active');
+            setTimeout(() => commandInput.focus(), 100);
+        });
+
+        commandPalette.addEventListener('click', function(e) {
+            if (e.target === commandPalette) {
+                commandPalette.classList.remove('active');
+                commandInput.value = '';
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                commandPalette.classList.add('active');
+                setTimeout(() => commandInput.focus(), 100);
+            }
+            if (e.key === 'Escape') {
+                commandPalette.classList.remove('active');
+                commandInput.value = '';
+                closeModal();
+            }
+        });
+
+        // Command search filter
+        commandInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.command-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        });
+
+        // Command item click
+        document.querySelectorAll('.command-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const action = this.dataset.action;
+                commandPalette.classList.remove('active');
+                commandInput.value = '';
+                
+                if (action === 'new-task') {
+                    openModal();
+                } else if (action) {
+                    showToast('تنفيذ: ' + this.querySelector('.command-item-title').textContent, 'success');
+                }
+            });
+        });
+
+        // Modal
+        function openModal() {
+            document.getElementById('taskModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+        }
+
+        document.getElementById('taskModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Form Submit
+        function submitTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('taskTitle').value;
+            const priority = document.getElementById('taskPriority').value;
+            
+            closeModal();
+            document.getElementById('taskForm').reset();
+            showToast('تم إنشاء المهمة: ' + title, 'success');
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                showToast('تم نسخ: ' + text, 'success');
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            }).catch(() => {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                showToast('تم نسخ: ' + text, 'success');
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            });
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = `
+                <i class="toast-icon fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                showToast('البحث عن: ' + this.value, 'success');
+            }
+        });
+
+        // Location button
+        document.getElementById('locationBtn').addEventListener('click', function() {
+            showToast('تم تحديث الموقع: الرياض، السعودية', 'success');
+        });
+
+        // Theme toggle (visual feedback)
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                showToast('تم التبديل إلى الوضع الفاتح (تجريبي)', 'success');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                showToast('تم التبديل إلى الوضع الداكن', 'success');
+            }
+        });
+
+        // File card click
+        document.querySelectorAll('.file-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.file-copy-btn') || e.target.closest('.file-card-menu')) return;
+                const name = this.querySelector('.file-name').textContent;
+                showToast('فتح: ' + name, 'success');
+            });
+        });
+
+        // Task item click
+        document.querySelectorAll('.task-item, .kanban-card').forEach(item => {
+            item.addEventListener('click', function() {
+                const name = this.querySelector('.task-name, .kanban-card-title').textContent;
+                showToast('فتح: ' + name, 'success');
+            });
+        });
+
+        // Activity view buttons
+        document.querySelectorAll('.activity-action.view').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('تم فتح التفاصيل', 'success');
+            });
+        });
+
+        // Quick access items animation
+        document.querySelectorAll('.quick-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Animate stats on load
+        function animateValue(element, start, end, duration) {
+            const range = end - start;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(start + range * eased);
+                element.textContent = current.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.stat-card, .chart-card, .activity-card, .file-card, .kanban-column').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(el);
+        });
+
+        // Stagger animation
+        document.querySelectorAll('.stat-card').forEach((el, i) => {
+            el.style.transitionDelay = (i * 0.1) + 's';
+        });
+
+        document.querySelectorAll('.quick-item').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(10px)';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            el.style.transitionDelay = (i * 0.05) + 's';
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // User profile click
+        document.getElementById('userProfile').addEventListener('click', function() {
+            showToast('فتح الملف الشخصي', 'success');
+        });
+
+        // File menu buttons
+        document.querySelectorAll('.file-card-menu').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showToast('قائمة الخيارات', 'success');
+            });
+        });
+    </script>
+</body>
+</html>
